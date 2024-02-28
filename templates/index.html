@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask App</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <form method="post">
+        <label for="level">Level:</label>
+        <input type="text" name="level" min="1" value="1" required>
+        <label for="level">Alignment:</label>
+        <label for="random">Is random?</label>
+        <input type="checkbox" name="random" checked>
+        <input type="text" name="alignment" min="-1" max="1" value="0" required>
+        <button type="submit">Generate</button>
+    </form>
+    {% if sheet %}
+        <p>Name: {{ sheet.name }}</p>
+        <p>Level: {{ sheet.level }}, BM: {{ sheet.bm }}, R: {{ sheet.rating }}</p>
+        <p>Class: {{ sheet.cl.name }}</p>
+        <p>HP: {{ sheet.hp }}</p>
+        <p>Subclass: {{ sheet.sub_cl.name }}</p>
+        <table>
+            <tr>
+                <th>STR</th>
+                <th>DEX</th>
+                <th>CON</th>
+                <th>WIS</th>
+                <th>INT</th>
+                <th>CHA</th>
+            </tr>
+            <tr>
+                <td>{{ sheet.str }} ( {{ sheet.str_mod }} )</td>
+                <td>{{ sheet.dex }} ( {{ sheet.dex_mod }} )</td>
+                <td>{{ sheet.con }} ( {{ sheet.con_mod }} )</td>
+                <td>{{ sheet.wis }} ( {{ sheet.wis_mod }} )</td>
+                <td>{{ sheet.int }} ( {{ sheet.int_mod }} )</td>
+                <td>{{ sheet.cha }} ( {{ sheet.cha_mod }} )</td>
+            </tr>
+        </table>
+        <p>Passive Perception: {{ sheet.passive_perception }}</p>
+        {% if sheet.items[0] %}<p>Armor: {{sheet.items[0].name}} | AC: {{sheet.items[0].cd}}</p>{% endif %}
+        {% if sheet.items[1] %}<p>Weapon: {{sheet.items[1].name}} | DAMAGE: {{sheet.items[1].damage}}</p>{% endif %}
+        <p>Shield: {% if sheet.items[2] %} True | +2 AC {% else %} False {% endif %} </p>
+        {% if sheet.cl.has_cantrip and sheet.sub_cl.caster %}
+            <p>Cantrips:</p>
+            {% for cantrip in sheet.spells[0] %}
+                <div class="spell">
+                    <span class="spell-name">{{ cantrip.name }} </span>
+                    <div class="spell-description">
+                        <p>Casting time: {{cantrip.casting_time}}</p>
+                        <p>Materials: {{ cantrip.components.raw }}</p>
+                        <p>Level: Cantrip</p>
+                        <p>Range: {{ cantrip.range }}</p>
+                        <p>Duration: {{ cantrip.duration }}</p>
+                        <p>Ritual: {{ cantrip.ritual }}</p>
+                        <p>School: {{ cantrip.school }}</p>
+                        <p>Description: </p>
+                        <p>{{ cantrip.description }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% for level in range(1, 10) %}
+            {% if sheet.sub_cl.caster and sheet.spells[level] %}
+                <p>Level {{ level }}:</p>
+                {% for spell in sheet.spells[level] %}
+                <div class="spell">
+                    <span class="spell-name">{{ spell.name }} </span>
+                    <div class="spell-description">
+                        <p>Casting time: {{spell.casting_time}}</p>
+                        <p>Materials: {{ spell.components.raw }}</p>
+                        <p>Level: {{ level }}</p>
+                        <p>Range: {{ spell.range }}</p>
+                        <p>Duration: {{ spell.duration }}</p>
+                        <p>Ritual: {{ spell.ritual }}</p>
+                        <p>School: {{ spell.school }}</p>
+                        <p>Description: </p>
+                        <p>{{ spell.description }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,24 @@
+.spell {
+    display: inline-block; /* Размещаем элементы spell в ряд */
+    margin: 10px;
+    position: relative; /* Для позиционирования описания */
+}
+
+.spell-name {
+    cursor: pointer; /* Изменяет курсор, чтобы показать, что это интерактивный элемент */
+}
+
+.spell-description {
+    display: none; /* Сначала скрыть описание */
+    position: absolute;
+    width: 500px; /* или нужная вам ширина */
+    background-color: white; /* фон описания */
+    border: 1px solid #ddd; /* граница описания */
+    z-index: 100; /* Убедитесь, что описание находится над другими элементами */
+    left: 0;
+    top: 20px; /* Расстояние от названия заклинания до описания */
+}
+
+.spell:hover .spell-description {
+    display: block; /* Показать описание при наведении */
+}
